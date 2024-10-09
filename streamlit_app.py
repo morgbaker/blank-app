@@ -1,28 +1,35 @@
 import streamlit as st
-from transformers import DistilBertForSequenceClassification, DistilBertTokenizer
+from transformers import DistilBertTokenizer, DistilBertModel
 import torch
 
-# Load pre-trained DistilBERT model for humor detection
-model_name = "mrm8488/distilbert-base-uncased-finetuned-humor"
-model = DistilBertForSequenceClassification.from_pretrained(model_name)
+# Load pre-trained DistilBERT model and tokenizer
+model_name = "distilbert-base-uncased"
 tokenizer = DistilBertTokenizer.from_pretrained(model_name)
+model = DistilBertModel.from_pretrained(model_name)
 
-# Function to predict humor
-def predict_humor(text):
-    inputs = tokenizer(text, return_tensors="pt")
-    outputs = model(**inputs)
-    probs = torch.nn.functional.softmax(outputs.logits, dim=-1)
-    humor_prob = probs[0][1].item()  # Assuming class 1 is humor
-    return humor_prob
+# Streamlit app layout
+st.title("DistilBERT Text Analysis")
+st.write("Enter some text to analyze using DistilBERT.")
 
-# Streamlit app interface
-st.title("Humor Detection with DistilBERT")
-user_input = st.text_area("Enter text to analyze:", "")
+# Text input from user
+input_text = st.text_area("Text Input", "Type your text here...")
 
 if st.button("Analyze"):
-    humor_probability = predict_humor(user_input)
-    if humor_probability > 0.5:
-        st.write(f"This text is likely humorous with a probability of {humor_probability:.2f}")
+    if input_text:
+        # Tokenize and prepare input
+        inputs = tokenizer(input_text, return_tensors="pt", padding=True, truncation=True)
+        
+        # Get model outputs
+        with torch.no_grad():  # Disable gradient calculation for inference
+            outputs = model(**inputs)
+        
+        # Access the last hidden states
+        last_hidden_states = outputs.last_hidden_state
+        
+        # Display results
+        st.write("Last Hidden States:")
+        st.write(last_hidden_states.numpy())
     else:
-        st.write(f"This text is not humorous with a probability of {1-humor_probability:.2f}")
+        st.warning("Please enter some text to analyze.")
 
+# Optional: Add any additional functionality, visualizations, or models for specific tasks
