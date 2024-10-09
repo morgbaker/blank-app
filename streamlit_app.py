@@ -9,7 +9,7 @@ model = AutoModelForSequenceClassification.from_pretrained("mohameddhiab/humor-n
 st.title("Humor Detection with Transformers")
 
 # Text input from user
-input_text = st.text_input("Enter your text:", "It's raining cats and dogs")
+input_text = st.text_input("Enter your text:", "")
 
 if input_text:
     # Tokenize the input text
