@@ -7,18 +7,51 @@ from PIL import Image
 tokenizer = AutoTokenizer.from_pretrained("mohameddhiab/humor-no-humor")
 model = AutoModelForSequenceClassification.from_pretrained("mohameddhiab/humor-no-humor")
 
-# App title
-st.title("Humor Detector: Laugh or Pass?")
+# Set the title and background
+st.set_page_config(page_title="Humor Detection App", layout="centered")
+st.title("🤖 Humor Detection with Transformers")
 
-# Introduction section
-st.write("""
-    This web app allows users to input a phrase or joke and determine whether it’s humorous or not.
-    Using advanced machine learning techniques, specifically a fine-tuned DistilBERT model, this app analyzes 
-    the text and classifies it as either 'funny' or 'not funny.' Join in the fun and see if your jokes can make the cut!
-""")
+# Create tabs
+tabs = st.tabs(["🎓 Credits", "📖 About the Model"])
+
+# Credits tab
+with tabs[0]:
+    st.header("About Me")
+    col1, col2 = st.columns([1, 2])  # Create two columns for layout
+    
+    with col1:
+        # Display your permanent image
+        image_path = "your_image.jpg"  # Replace with the name of your image file
+        image = Image.open(image_path)
+        st.image(image, caption='Your Name', use_column_width=True)
+
+    with col2:
+        st.write("👋 Hello! I'm an undergraduate student studying **Data Science** and **Economics**.")
+        st.write("This app uses a fine-tuned model to detect humor in text.")
+    
+    st.markdown("---")  # Add a horizontal line for separation
+    st.write("### Credits")
+    st.write("Developed by: **Your Name**")  # Replace with your name
+    st.write("Photo by: [Your Photo Credit]")  # Replace if needed
+
+# About the Model tab
+with tabs[1]:
+    st.header("About the Model")
+    st.write("### DistilBERT")
+    st.write("""
+        DistilBERT is a smaller, faster, and lighter version of BERT (Bidirectional Encoder Representations from Transformers). 
+        It retains 97% of BERT's language understanding while being 60% faster and reducing the model size by 40%. 
+        This model is particularly useful for tasks such as sentiment analysis, question answering, and text classification.
+    """)
+    st.write("This model has been fine-tuned on a joke/no-joke dataset to effectively detect humor in text.")
+    
+    st.markdown("---")  # Add a horizontal line for separation
+    st.write("### Model Performance")
+    st.write("The model achieves impressive results on the evaluation set.")
 
 # Text input from user
-input_text = st.text_input("Enter your text:", "")
+st.markdown("---")  # Add a horizontal line for separation
+input_text = st.text_input("💬 Enter your text:", "")
 
 if input_text:
     # Tokenize the input text
@@ -36,7 +69,7 @@ if input_text:
     result = labels[predicted_class]
 
     # Display the result
-    st.write("Prediction:")
+    st.write("### Prediction:")
     st.write(result)
 
     # Fun effects based on the prediction
@@ -46,27 +79,6 @@ if input_text:
     else:
         st.warning("😐 Not quite a joke! Better luck next time!")
 
-# Credits section
-st.header("Credits")
-st.write("Model: humor-no-humor by [mohameddhiab](https://huggingface.co/mohameddhiab/humor-no-humor)")
-
-# Professional biography section
-image = Image.open("headshot.jpg")  # Replace with your image file name
-
-st.header("Morgan Baker")
-st.image(image, caption='Morgan Baker', use_column_width=True)
-st.write("Hello! I am an undergraduate student studying Data Science and Economics.")
-
-# User guidance section
-st.header("User Guidance")
-st.write("Try puns or one-liners for the best results!")
-st.write("Examples:")
-st.write("- Input: 'Why did the chicken cross the road?'")
-st.write("- Output: Humor")
-
-# Conclusion section
-st.header("Thank You!")
-st.write("Thank you for using Humor Detector! We hope you found some laughs along the way.")
 
 
 
