@@ -21,7 +21,7 @@ with tabs[0]:
     
     with col1:
         # Display your permanent image
-        image_path = "your_image.jpg"  # Replace with the name of your image file
+        image_path = "headshot.jpg"  # Replace with the name of your image file
         image = Image.open(image_path)
         st.image(image, caption='Your Name', use_column_width=True)
 
