@@ -1,14 +1,12 @@
 import streamlit as st
 import torch
-from transformers import DistilBertTokenizer, DistilBertModel
-import numpy as np
-import pandas as pd
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
-# Load the model and tokenizer
-tokenizer = DistilBertTokenizer.from_pretrained("distilbert-base-uncased")
-model = DistilBertModel.from_pretrained("distilbert-base-uncased")
+# Load the tokenizer and model for humor detection
+tokenizer = AutoTokenizer.from_pretrained("mohameddhiab/humor-no-humor")
+model = AutoModelForSequenceClassification.from_pretrained("mohameddhiab/humor-no-humor")
 
-st.title("Text Analysis with DistilBERT")
+st.title("Humor Detection with Transformers")
 
 # Text input from user
 input_text = st.text_input("Enter your text:", "It's raining cats and dogs")
@@ -21,12 +19,15 @@ if input_text:
     with torch.no_grad():
         outputs = model(**inputs)
 
-    # Reshape the output
-    model_output = outputs.last_hidden_state.detach().numpy()  # Convert to NumPy array
-    reshaped_output = np.mean(model_output, axis=1)  # Average over the token dimension
+    # Get the predicted class
+    predicted_class = torch.argmax(outputs.logits, dim=1).item()
 
-    # Create a DataFrame to display the result
-    df = pd.DataFrame(reshaped_output)  # This should now be 2D
-    st.write("Model Output:")
-    st.dataframe(df)  # Display the DataFrame
+    # Define the labels
+    labels = ['No Humor', 'Humor']  # Adjust labels based on the model's training
+    result = labels[predicted_class]
+
+    # Display the result
+    st.write("Prediction:")
+    st.write(result)
+
 
