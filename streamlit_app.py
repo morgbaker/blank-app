@@ -30,4 +30,12 @@ if input_text:
     st.write("Prediction:")
     st.write(result)
 
+    # Fun effects based on the prediction
+    if result == 'Humor':
+        st.balloons()  # Display balloons effect
+        st.success("😂 That's a funny joke! Keep them coming!")
+    else:
+        st.warning("😐 Not quite a joke! Better luck next time!")
+
+
 
